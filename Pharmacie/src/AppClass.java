@@ -2,19 +2,18 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class AppClass {
 	static Meds meds = new Meds();
-	BufferedWriter writer = null;
-	FileWriter fn = new FileWriter(fb,true);
-	writer = new BufferedWriter(fw);
-	public static void main(String[] args) {
-		 // authentification();
+	
+	public static void main(String[] args) throws IOException {
+		 //this is for test delete if you want 
 		
-		  updateMeds();
-         //loaddata();
-          
+			 updateMeds();
+		
+         
 
 
 
@@ -22,6 +21,10 @@ public class AppClass {
 	
 ////////////Meds Part////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 ////////////////////////////////////////////////////////////////////////	
+	public static void clearscreen() {
+	System.out.print("\033[H\033[2J");  
+    System.out.flush();  
+	}
 	public static void displayMeds() {
 		
 		
@@ -63,28 +66,57 @@ public class AppClass {
 		
 	}
 	public static void updateMeds() {
+		clearscreen();
+		try {
+			loaddata();
+			File file = new File("Meds.txt");
+			displayMeds();
+			System.out.println("Please give the nameof the med you want to update");
+			Scanner sc =new Scanner(System.in);
+			String nameofmed = sc.nextLine();
+			int index= meds.getNames().indexOf(nameofmed);
+			System.out.println(index);
+			System.out.println("Give the new quantity");
+			String qty =sc.nextLine();
+			meds.getQuantitities().set(index, qty);
+			System.out.println(meds.getNames());
+			System.out.println(meds.getQuantitities());
+		} catch (Exception e) {
+			System.out.println("Something went wrong please check the name of your medecine ");
+		}
 		
-		loaddata();
-		File file = new File("Meds.txt");
-		displayMeds();
-		System.out.println("Please give the nameof the med you want to update");
-		Scanner sc =new Scanner(System.in);
-		String nameofmed = sc.nextLine();
-		int index= meds.getNames().indexOf(nameofmed);
-		System.out.println(index);
-		System.out.println("Give the new quantity");
-		String qty =sc.nextLine();
-		meds.getQuantitities().set(index, qty);
-		System.out.println(meds.getNames());
-		System.out.println(meds.getQuantitities());
 		
-		
+	  
+	    try {
+	    	  BufferedWriter writer = new BufferedWriter(new FileWriter("Meds.txt", false));
+	    	
+	    	  for (int i= 0 ; i<meds.getNames().size();i++) {
+	    		  
+	    	  
+			writer.write('\n');
+			writer.write((meds.getNames().get(i)));
+			writer.write(' ');
+			writer.write((meds.getQuantitities().get(i)));
+			 System.out.println("Medecine updated successfully !!");	
+			 
+	    	  }
+			    writer.close();
+			    clearscreen();
+			   
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Something went wrong");
+		}
+	   
+	   
+	
 	}
 	
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	 
 
 
 	public static void FirstMenu() {
+		clearscreen();
 		System.out.println("#________________________________________________________#");
 		System.out.println("#---------------------=Pharmacy App----------------------#");
 		System.out.println("#________________________________________________________#");
@@ -97,6 +129,7 @@ public class AppClass {
 	}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 	 public static void Menumed() {
+		    clearscreen();
 	     	System.out.println("#________________________________________________________#");
 			System.out.println("#---------------------=Pharmacy App----------------------#");
 			System.out.println("#________________________________________________________#");
@@ -116,4 +149,8 @@ public class AppClass {
     public static void Menuclients() {
     	
     }
+    
+    
+    
+    
 }
